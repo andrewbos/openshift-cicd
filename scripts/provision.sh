@@ -11,8 +11,10 @@ function usage() {
     echo " $0 [command] [options]"
     echo " $0 --help"
     echo
-    echo "Example:"
-    echo " $0 deploy --project-suffix mydemo"
+    echo "Examples:"
+    echo " $0 deploy --project-project"         #creates projects with names fixed names e.g cicd, dev en stage
+    echo " $0 deploy --project-prefix test"     #creates projects with names with prefix test e.g. test-cicd etc
+    echo " $0 deploy --project-suffix mydemo"   #creates projects with names with prefix <openshift username> and suffix mydemo e.g <username->cicd-mydemo
     echo
     echo "COMMANDS:"
     echo "   deploy                   Set up the demo projects and deploy demo apps"
@@ -28,7 +30,7 @@ function usage() {
     echo "   --project-purpose [purpose] Optional    Purpose of these projects. If not present then demo is assumed and accordingly PREFIX and SUFFIX will also be set otherwise ignored. ignored."
     echo "   --project-prefix [prefix]   Optional    prefix to be added to in front off project names e.g. ci-PREFIX. If empty, user will be used as prefix"
     echo "   --project-suffix [suffix]   Optional    Suffix to be added to at end of project names e.g. ci-SUFFIX. Only if not empty"
-    echo "   --ephemeral                 Optional    Deploy demo without persistent storage. Default false"
+    echo "   --ephemeral                 Optional    Deploy demo without persistent storage. Default true"
     echo "   --oc-options                Optional    oc client options to pass to all oc commands e.g. --server https://my.openshift.com"
     echo
 }
