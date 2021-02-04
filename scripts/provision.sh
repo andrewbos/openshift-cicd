@@ -25,7 +25,7 @@ function usage() {
     echo "   --quay-username             Optional    quay.io username to push the images to a quay.io account. Required if --enable-quay is set"
     echo "   --quay-password             Optional    quay.io password to push the images to a quay.io account. Required if --enable-quay is set"
     echo "   --user [username]           Optional    The admin user for the demo projects. Required if logged in as kube:admin"
-    echo "   --project-purpose [purpose] Optional    Purpose of these projects. If empty then demo is assumed and accordingly PREFIX and SUFFIX will also be set d.i. ignored."
+    echo "   --project-purpose [purpose] Optional    Purpose of these projects. If not present then demo is assumed and accordingly PREFIX and SUFFIX will also be set otherwise ignored. ignored."
     echo "   --project-prefix [prefix]   Optional    prefix to be added to in front off project names e.g. ci-PREFIX. If empty, user will be used as prefix"
     echo "   --project-suffix [suffix]   Optional    Suffix to be added to at end of project names e.g. ci-SUFFIX. Only if not empty"
     echo "   --ephemeral                 Optional    Deploy demo without persistent storage. Default false"
