@@ -12,7 +12,7 @@ function usage() {
     echo " $0 --help"
     echo
     echo "Examples:"
-    echo " $0 deploy --project-project"         #creates projects with names fixed names e.g cicd, dev en stage
+    echo " $0 deploy --project-project"         #creates projects with fixed names e.g cicd, dev en stage
     echo " $0 deploy --project-prefix test"     #creates projects with names with prefix test e.g. test-cicd etc
     echo " $0 deploy --project-suffix mydemo"   #creates projects with names with prefix <openshift username> and suffix mydemo e.g <username->cicd-mydemo
     echo
@@ -30,7 +30,7 @@ function usage() {
     echo "   --project-purpose [purpose] Optional    Purpose of these projects. If not present then demo is assumed and accordingly PREFIX and SUFFIX will also be set otherwise ignored. ignored."
     echo "   --project-prefix [prefix]   Optional    prefix to be added to in front off project names e.g. ci-PREFIX. If empty, user will be used as prefix"
     echo "   --project-suffix [suffix]   Optional    Suffix to be added to at end of project names e.g. ci-SUFFIX. Only if not empty"
-    echo "   --ephemeral                 Optional    Deploy demo without persistent storage. Default true"
+    echo "   --persistent                Optional    Deploy demo with persistent storage. Default false"
     echo "   --oc-options                Optional    oc client options to pass to all oc commands e.g. --server https://my.openshift.com"
     echo
 }
@@ -40,7 +40,7 @@ ARG_PROJECT_PURPOSE=
 ARG_PROJECT_PREFIX=
 ARG_PROJECT_SUFFIX=
 ARG_COMMAND=
-ARG_EPHEMERAL=false
+ARG_PERSISTENT=false
 ARG_OC_OPS=
 ARG_ENABLE_QUAY=false
 ARG_QUAY_USER=
@@ -126,8 +126,8 @@ while :; do
                 exit 255
             fi
             ;;
-        --ephemeral)
-            ARG_EPHEMERAL=true
+        --persistent)
+            ARG_PERSISTENT=true
             ;;
         -h|--help)
             usage
@@ -155,8 +155,8 @@ done
 
 LOGGEDIN_USER=$(oc $ARG_OC_OPS whoami)
 OPENSHIFT_USER=${ARG_USERNAME:-$LOGGEDIN_USER}
-PRJ_PREFIX=${ARG_PROJECT_SUFFIX:-`echo $OPENSHIFT_USER | sed -e 's/[-@].*//g'`}
-GITHUB_ACCOUNT=${GITHUB_ACCOUNT:-siamaksade}
+PRJ_PREFIX=${ARG_PROJECT_PREFIX:-`echo $OPENSHIFT_USER | sed -e 's/[-@].*//g'`}
+GITHUB_ACCOUNT=${GITHUB_ACCOUNT:-andrewbos}
 GITHUB_REF=${GITHUB_REF:-ocp-4.6}
 
 function deploy() {
@@ -198,7 +198,11 @@ function deploy() {
 
   sleep 2
 
-  oc new-app jenkins-ephemeral -n cicd-$PRJ_SUFFIX
+  if [ !$ARG_PERSISTENT ] ; then
+     oc new-app jenkins-ephemeral -n $PRJ_PREFIXcicd$PRJ_SUFFIX
+  else
+    oc new-app jenkins-persistent -n $PRJ_PREFIXcicd$PRJ_SUFFIX
+  fi
 
   sleep 2
 
