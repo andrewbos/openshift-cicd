@@ -208,7 +208,7 @@ function deploy() {
 
   local template=https://raw.githubusercontent.com/$GITHUB_ACCOUNT/openshift-cicd/$GITHUB_REF/cicd-template.yaml
   echo "Using template $template"
-  oc $ARG_OC_OPS new-app -f $template -p DEV_PROJECT=$PRJ_PREFIXdev$PRJ_SUFFIX -p STAGE_PROJECT=$PRJ_PREFIXstage$PRJ_SUFFIX -p EPHEMERAL=$ARG_EPHEMERAL -p ENABLE_QUAY=$ARG_ENABLE_QUAY -p QUAY_USERNAME=$ARG_QUAY_USER -p QUAY_PASSWORD=$ARG_QUAY_PASS -n $PRJ_PREFIXcicd$PRJ_SUFFIX 
+  oc $ARG_OC_OPS new-app -f $template -p DEV_PROJECT=$PRJ_PREFIXdev$PRJ_SUFFIX -p STAGE_PROJECT=$PRJ_PREFIXstage$PRJ_SUFFIX -p EPHEMERAL=true -p ENABLE_QUAY=$ARG_ENABLE_QUAY -p QUAY_USERNAME=$ARG_QUAY_USER -p QUAY_PASSWORD=$ARG_QUAY_PASS -n $PRJ_PREFIXcicd$PRJ_SUFFIX 
 }
 
 function make_idle() {
