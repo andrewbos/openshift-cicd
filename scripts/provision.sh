@@ -21,18 +21,20 @@ function usage() {
     echo "   unidle                   Make all demo services unidle"
     echo 
     echo "OPTIONS:"
-    echo "   --enable-quay              Optional    Enable integration of build and deployments with quay.io"
-    echo "   --quay-username            Optional    quay.io username to push the images to a quay.io account. Required if --enable-quay is set"
-    echo "   --quay-password            Optional    quay.io password to push the images to a quay.io account. Required if --enable-quay is set"
-    echo "   --user [username]          Optional    The admin user for the demo projects. Required if logged in as kube:admin"
-    echo "   --project-prefix [prefix]  Optional    prefix to be added to in front off project names e.g. ci-PREFIX. If empty, user will be used as prefix"
-    echo "   --project-suffix [suffix]  Optional    Suffix to be added to at end of project names e.g. ci-SUFFIX. Only if not empty"
-    echo "   --ephemeral                Optional    Deploy demo without persistent storage. Default false"
-    echo "   --oc-options               Optional    oc client options to pass to all oc commands e.g. --server https://my.openshift.com"
+    echo "   --enable-quay               Optional    Enable integration of build and deployments with quay.io"
+    echo "   --quay-username             Optional    quay.io username to push the images to a quay.io account. Required if --enable-quay is set"
+    echo "   --quay-password             Optional    quay.io password to push the images to a quay.io account. Required if --enable-quay is set"
+    echo "   --user [username]           Optional    The admin user for the demo projects. Required if logged in as kube:admin"
+    echo "   --project-purpose [purpose] Optional    Purpose of these projects. If empty then demo is assumed and accordingly PREFIX and SUFFIX will also be set d.i. ignored."
+    echo "   --project-prefix [prefix]   Optional    prefix to be added to in front off project names e.g. ci-PREFIX. If empty, user will be used as prefix"
+    echo "   --project-suffix [suffix]   Optional    Suffix to be added to at end of project names e.g. ci-SUFFIX. Only if not empty"
+    echo "   --ephemeral                 Optional    Deploy demo without persistent storage. Default false"
+    echo "   --oc-options                Optional    oc client options to pass to all oc commands e.g. --server https://my.openshift.com"
     echo
 }
 
 ARG_USERNAME=
+ARG_PROJECT_PURPOSE=
 ARG_PROJECT_PREFIX=
 ARG_PROJECT_SUFFIX=
 ARG_COMMAND=
@@ -66,6 +68,9 @@ while :; do
                 exit 255
             fi
             ;;
+        --project-purpose)
+            ARG_PROJECT_PURPOSE=true
+            ;;        
         --project-prefix)
             if [ -n "$2" ]; then
                 ARG_PROJECT_PREFIX=$2
@@ -75,6 +80,7 @@ while :; do
                 usage
                 exit 255
             fi
+            ;;
         --project-suffix)
             if [ -n "$2" ]; then
                 ARG_PROJECT_SUFFIX=$2
@@ -159,6 +165,11 @@ function deploy() {
 
   if [ $SUF_PREFIX != '' ] ; then
       PRJ_SUFFIX = "-" + $PRJ_SUFFIX
+  fi
+
+  if [ $ARG_PROJECT_PURPOSE ] ; then
+      PRJ_PREFIX = 
+      PRJ_SUFFIX = 
   fi
 
   oc $ARG_OC_OPS new-project $PRJ_PREFIXdev$PRJ_SUFFIX   --display-name="Tasks - Dev"
